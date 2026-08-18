@@ -3,6 +3,8 @@ import Link from "next/link";
 import { categories } from "@/data/categories";
 import { WHATSAPP_ORDER_NUMBER } from "@/lib/whatsapp";
 
+const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/rdpiWmjmPJdPyWD56";
+
 export function Footer() {
   return (
     <footer className="mt-16 border-t border-brand-beige/60 bg-brand-cream">
@@ -35,14 +37,24 @@ export function Footer() {
 
           <div className="text-sm">
             <p className="font-semibold text-ink">تواصل معنا</p>
-            <a
-              href={`https://wa.me/${WHATSAPP_ORDER_NUMBER}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-block text-ink/80 hover:text-brand-brown"
-            >
-              واتساب: +212 691 186 890
-            </a>
+            <div className="mt-2 flex flex-col gap-2">
+              <a
+                href={`https://wa.me/${WHATSAPP_ORDER_NUMBER}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink/80 hover:text-brand-brown"
+              >
+                واتساب: +212 691 186 890
+              </a>
+              <a
+                href={GOOGLE_MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink/80 hover:text-brand-brown"
+              >
+                موقعنا
+              </a>
+            </div>
           </div>
         </div>
 
