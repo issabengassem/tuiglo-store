@@ -2,7 +2,7 @@ import type { CartLine } from "@/data/types";
 import type { CartTotals } from "@/lib/pricing";
 import { getColorVariantById, getProductById } from "@/data/products";
 import { formatPrice } from "@/lib/format";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { ProductImage } from "@/components/ui/ProductImage";
 
 interface Props {
   lines: CartLine[];
@@ -26,7 +26,12 @@ export function OrderSummary({ lines, totals }: Props) {
               key={`${line.productId}-${line.colorVariantId}`}
               className="flex items-center gap-3 border-b border-ink/10 py-3 last:border-b-0"
             >
-              <ImagePlaceholder className="h-14 w-14 shrink-0 rounded-sm" />
+              <ProductImage
+                src={variant.images.primary}
+                alt={`${product.name.ar} — ${variant.colorName.ar}`}
+                className="h-14 w-14 shrink-0 rounded-sm"
+                sizes="56px"
+              />
               <div className="flex-1 text-start text-sm">
                 <p className="font-medium text-ink">{product.name.ar}</p>
                 <p className="text-xs text-ink/60">
@@ -48,7 +53,7 @@ export function OrderSummary({ lines, totals }: Props) {
         </div>
         {totals.wholesaleDiscountTotal > 0 && (
           <div className="flex justify-between text-brand-brown">
-            <span>خصم الجملة (10 قطع فأكثر لنفس المنتج)</span>
+            <span>خصم الجملة (حسب الكمية الإجمالية لكل منتج)</span>
             <span dir="ltr">-{formatPrice(totals.wholesaleDiscountTotal)}</span>
           </div>
         )}

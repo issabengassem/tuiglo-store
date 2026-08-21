@@ -1,20 +1,54 @@
 import type { CartLine, Product } from "@/data/types";
 import { getProductById } from "@/data/products";
 
-/** WHOLESALE_THRESHOLD/DISCOUNT are the universal rule for every product — not product/category-specific. */
-export const WHOLESALE_THRESHOLD = 10;
-export const WHOLESALE_DISCOUNT_PER_UNIT = 20;
+/**
+ * The ONE shared source of truth for wholesale pricing tiers. Every
+ * consumer (product page preview, AddToCartForm, cart lines/totals,
+ * checkout order summary, WhatsApp order message) must go through
+ * `unitPriceForQuantity` / `computeCartTotals` below — never re-implement
+ * this table elsewhere.
+ *
+ * Tiers (2026-08-19 business rule): quantity is the combined total of one
+ * product across ALL of its colors, not per color.
+ *   1–9    -> base price
+ *   10–29  -> base price − 5 DH/unit
+ *   30–49  -> base price − 10 DH/unit
+ *   50–99  -> base price − 15 DH/unit
+ *   100+   -> base price − 20 DH/unit
+ * Sorted descending so the first matching tier (by minQty) wins.
+ */
+export interface WholesaleTier {
+  minQty: number;
+  deduction: number;
+}
+
+export const WHOLESALE_TIERS: WholesaleTier[] = [
+  { minQty: 100, deduction: 20 },
+  { minQty: 50, deduction: 15 },
+  { minQty: 30, deduction: 10 },
+  { minQty: 10, deduction: 5 },
+];
+
+/** The lowest quantity at which any discount at all applies. */
+export const WHOLESALE_THRESHOLD = WHOLESALE_TIERS[WHOLESALE_TIERS.length - 1].minQty;
+
+export function deductionForQuantity(qty: number): number {
+  return activeTier(qty)?.deduction ?? 0;
+}
+
+/** The single matching tier for a quantity, or undefined below the lowest threshold. */
+export function activeTier(qty: number): WholesaleTier | undefined {
+  return WHOLESALE_TIERS.find((t) => qty >= t.minQty);
+}
 
 /**
- * 1-9 units of a product (summed across ALL of its colors) -> normal price.
- * 10+ units -> flat 20 DH/unit off, applied to every unit of that product.
- * See WEBSITE_IMPLEMENTATION_PLAN.md §8 for the worked examples this is
- * tested against.
+ * Final unit price for a product given its combined quantity across colors.
+ * Deduction is clamped so the price can never go negative or below zero,
+ * even for a very low base price.
  */
 export function unitPriceForQuantity(basePrice: number, totalQtyAcrossColors: number): number {
-  return totalQtyAcrossColors >= WHOLESALE_THRESHOLD
-    ? basePrice - WHOLESALE_DISCOUNT_PER_UNIT
-    : basePrice;
+  const deduction = Math.min(deductionForQuantity(totalQtyAcrossColors), basePrice);
+  return basePrice - deduction;
 }
 
 export interface ProductGroupTotal {
@@ -27,9 +61,9 @@ export interface ProductGroupTotal {
 
 /**
  * Groups cart lines BY PRODUCT (not product+color) and applies the
- * wholesale rule to each group's combined quantity — a customer's 10 units
- * might be spread across three different colors, and the discount still
- * applies to all of them once the combined total crosses the threshold.
+ * wholesale rule to each group's combined quantity — a customer's units
+ * might be spread across several different colors, and the tier still
+ * applies to all of them once the combined total crosses a threshold.
  */
 export function groupCartByProduct(
   lines: CartLine[],
@@ -63,6 +97,11 @@ export interface CartTotals {
   groups: ProductGroupTotal[];
 }
 
+/**
+ * Note: this always recomputes from each line's live qty and the product's
+ * base price — a cart line never stores a "discounted unit price" that
+ * could go stale. Changing qty always re-derives the correct tier.
+ */
 export function computeCartTotals(
   lines: CartLine[],
   productLookup?: (id: string) => Product | undefined

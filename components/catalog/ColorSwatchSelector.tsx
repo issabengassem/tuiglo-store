@@ -30,28 +30,59 @@ export function ColorSwatchSelector({ variants, selectedId, onSelect }: Props) {
         {variants.map((variant) => {
           const purchasable = isPurchasable(variant.stock);
           const selected = variant.id === selectedId;
+          const hasRealColor = !!variant.hex;
+
+          const sharedProps = {
+            type: "button" as const,
+            disabled: !purchasable,
+            onClick: () => onSelect(variant.id),
+            "aria-pressed": selected,
+            "aria-disabled": !purchasable,
+            title: `${variant.colorName.ar} — ${stockLabel(variant.stock)}`,
+          };
+
+          // Real hex -> an actual color swatch. No hex on the source sheet
+          // -> a text chip showing the real color name instead of a fake
+          // fill; it must never render a solid color it doesn't know.
+          if (hasRealColor) {
+            return (
+              <button
+                key={variant.id}
+                {...sharedProps}
+                className={[
+                  "relative h-11 w-11 rounded-full border transition",
+                  selected ? "ring-2 ring-brand-brown ring-offset-2" : "border-ink/20",
+                  purchasable ? "cursor-pointer" : "cursor-not-allowed opacity-35",
+                ].join(" ")}
+                style={{ backgroundColor: variant.hex! }}
+              >
+                <span className="sr-only">
+                  {variant.colorName.ar} — {stockLabel(variant.stock)}
+                </span>
+                {!purchasable && (
+                  <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center text-ink">
+                    ×
+                  </span>
+                )}
+              </button>
+            );
+          }
+
           return (
             <button
               key={variant.id}
-              type="button"
-              disabled={!purchasable}
-              onClick={() => onSelect(variant.id)}
-              aria-pressed={selected}
-              aria-disabled={!purchasable}
-              title={`${variant.colorName.ar} — ${stockLabel(variant.stock)}`}
+              {...sharedProps}
               className={[
-                "relative h-11 w-11 rounded-full border transition",
+                "relative flex h-11 items-center justify-center rounded-md border px-3 text-xs font-medium transition",
                 selected ? "ring-2 ring-brand-brown ring-offset-2" : "border-ink/20",
-                purchasable ? "cursor-pointer" : "cursor-not-allowed opacity-35",
+                purchasable
+                  ? "cursor-pointer bg-white text-ink hover:bg-brand-cream"
+                  : "cursor-not-allowed bg-white text-ink/40",
               ].join(" ")}
-              style={{ backgroundColor: variant.hex ?? "#D1BB9E" }}
             >
-              <span className="sr-only">{variant.colorName.ar}</span>
-              {!purchasable && (
-                <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center text-ink">
-                  ×
-                </span>
-              )}
+              {variant.colorName.ar}
+              {!purchasable && <span aria-hidden="true" className="ms-1.5">×</span>}
+              <span className="sr-only"> — {stockLabel(variant.stock)}</span>
             </button>
           );
         })}

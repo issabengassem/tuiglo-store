@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/layout/Hero";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { allProducts } from "@/data/products";
 import { getCategoryById } from "@/data/categories";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   // Best sellers/new arrivals are curated via Product.statusBadges, set

@@ -17,9 +17,13 @@ export async function generateMetadata({
   const { category: categorySlug } = await params;
   const category = getCategoryBySlug(categorySlug);
   if (!category) return {};
+  const title = category.name.ar ?? category.slug;
+  const description = category.description.ar;
   return {
-    title: `${category.name.ar} — TUIGLO`,
-    description: category.description.ar,
+    title,
+    description,
+    alternates: { canonical: `/${category.slug}` },
+    openGraph: { title, description, url: `/${category.slug}` },
   };
 }
 

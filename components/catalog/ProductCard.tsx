@@ -1,9 +1,9 @@
 import Link from "next/link";
 import type { Product } from "@/data/types";
-import { getColorVariantsForProduct } from "@/data/products";
+import { getColorVariantsForProduct, getPrimaryDisplayImage } from "@/data/products";
 import { formatPrice } from "@/lib/format";
 import { isPurchasable } from "@/lib/stock-labels";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { ProductImage } from "@/components/ui/ProductImage";
 import { StockBadge } from "@/components/catalog/StockBadge";
 
 function aggregateStock(productId: string) {
@@ -22,7 +22,12 @@ export function ProductCard({ product, categorySlug }: { product: Product; categ
       href={`/${categorySlug}/${product.slug}`}
       className="group block overflow-hidden rounded-md bg-white shadow-warm transition-transform hover:-translate-y-0.5"
     >
-      <ImagePlaceholder className="aspect-square w-full" />
+      <ProductImage
+        src={getPrimaryDisplayImage(product.id)}
+        alt={product.name.ar ?? product.slug}
+        className="aspect-square w-full"
+        sizes="(min-width: 768px) 25vw, 50vw"
+      />
       <div className="space-y-2 p-4 text-start">
         <StockBadge stock={stock} />
         <h3 className="text-sm font-semibold text-ink">{product.name.ar}</h3>

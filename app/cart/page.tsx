@@ -37,7 +37,7 @@ export default function CartPage() {
             </div>
             {totals.wholesaleDiscountTotal > 0 && (
               <div className="flex justify-between text-brand-brown">
-                <span>خصم الجملة (10 قطع فأكثر لنفس المنتج)</span>
+                <span>خصم الجملة (حسب الكمية الإجمالية لكل منتج)</span>
                 <span dir="ltr">-{formatPrice(totals.wholesaleDiscountTotal)}</span>
               </div>
             )}

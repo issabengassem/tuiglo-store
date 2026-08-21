@@ -4,7 +4,7 @@ import type { CartLine } from "@/data/types";
 import { getColorVariantById, getProductById } from "@/data/products";
 import { formatPrice } from "@/lib/format";
 import { useCart } from "@/lib/cart-context";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { ProductImage } from "@/components/ui/ProductImage";
 
 export function CartLineItem({ line, unitPrice }: { line: CartLine; unitPrice: number }) {
   const { setQty, removeLine } = useCart();
@@ -14,7 +14,12 @@ export function CartLineItem({ line, unitPrice }: { line: CartLine; unitPrice: n
 
   return (
     <div className="flex gap-4 border-b border-ink/10 py-5">
-      <ImagePlaceholder className="h-20 w-20 shrink-0 rounded-sm" />
+      <ProductImage
+        src={variant.images.primary}
+        alt={`${product.name.ar} — ${variant.colorName.ar}`}
+        className="h-20 w-20 shrink-0 rounded-sm"
+        sizes="80px"
+      />
 
       <div className="flex flex-1 flex-col gap-2 text-start">
         <div className="flex items-start justify-between gap-3">

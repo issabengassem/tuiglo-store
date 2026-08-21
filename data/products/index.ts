@@ -34,3 +34,9 @@ export function getColorVariantsForProduct(productId: string): ColorVariant[] {
 export function getColorVariantById(id: string): ColorVariant | undefined {
   return allColorVariants.find((v) => v.id === id);
 }
+
+/** First color variant with a real photo wired in, or null while every variant is still a placeholder. */
+export function getPrimaryDisplayImage(productId: string): string | null {
+  const withImage = getColorVariantsForProduct(productId).find((v) => v.images.primary);
+  return withImage?.images.primary ?? null;
+}

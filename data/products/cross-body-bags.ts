@@ -1,6 +1,6 @@
 import type { ColorVariant, Product } from "../types";
 
-const emptyImages = () => ({ primary: null, secondary: [] });
+const withImage = (src: string) => ({ primary: src, secondary: [] });
 
 export const crossBodyBagProducts: Product[] = [
   {
@@ -19,5 +19,7 @@ export const crossBodyBagProducts: Product[] = [
 ];
 
 export const crossBodyBagColorVariants: ColorVariant[] = [
-  { id: "cv-crossbody-nike-1", productId: "prod-crossbody-nike-fanny", colorName: { ar: "أسود" }, hex: null, images: emptyImages(), stock: "available" },
+  // Only real color; hex sampled from the product's own photographed fabric
+  // region (see backpacks.ts header for the sampling policy).
+  { id: "cv-crossbody-nike-1", productId: "prod-crossbody-nike-fanny", colorName: { ar: "أسود" }, hex: "#2E363E", images: withImage("/products/crossbody-nike-fanny-pack/black.png"), stock: "available" },
 ];

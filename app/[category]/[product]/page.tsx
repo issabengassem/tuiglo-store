@@ -2,11 +2,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCategoryById, getCategoryBySlug } from "@/data/categories";
-import { allProducts, getColorVariantsForProduct, getProductBySlug } from "@/data/products";
-import { formatPrice } from "@/lib/format";
-import { specLabel } from "@/lib/spec-labels";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
-import { AddToCartForm } from "@/components/catalog/AddToCartForm";
+import {
+  allProducts,
+  getColorVariantsForProduct,
+  getPrimaryDisplayImage,
+  getProductBySlug,
+} from "@/data/products";
+import { ProductPurchasePanel } from "@/components/catalog/ProductPurchasePanel";
 import { RelatedProducts } from "@/components/catalog/RelatedProducts";
 
 export function generateStaticParams() {
@@ -24,9 +26,24 @@ export async function generateMetadata({
   const category = getCategoryBySlug(categorySlug);
   const product = getProductBySlug(productSlug);
   if (!category || !product || product.categoryId !== category.id) return {};
+
+  const title = product.name.ar ?? product.slug;
+  const description = product.shortDescription.ar;
+  const path = `/${category.slug}/${product.slug}`;
+  // Falls back to the sitewide default OG image (set in the root layout)
+  // until real per-product photos exist — never a substitute product photo.
+  const productImage = getPrimaryDisplayImage(product.id);
+
   return {
-    title: `${product.name.ar} — TUIGLO`,
-    description: product.shortDescription.ar,
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      title,
+      description,
+      url: path,
+      ...(productImage ? { images: [{ url: productImage }] } : {}),
+    },
   };
 }
 
@@ -44,7 +61,6 @@ export default async function ProductPage({
   }
 
   const variants = getColorVariantsForProduct(product.id);
-  const specEntries = Object.entries(product.specs);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -60,46 +76,7 @@ export default async function ProductPage({
         <span className="text-ink">{product.name.ar}</span>
       </nav>
 
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-        <div className="order-2 md:order-1">
-          <ImagePlaceholder className="aspect-square w-full rounded-md" />
-        </div>
-
-        <div className="order-1 space-y-6 text-start md:order-2">
-          <div>
-            <h1 className="text-2xl font-bold text-ink md:text-3xl">{product.name.ar}</h1>
-            <p className="mt-2 text-ink/70">{product.shortDescription.ar}</p>
-            <p dir="ltr" className="mt-3 text-start text-xl font-bold text-brand-brown">
-              {formatPrice(product.price)}
-            </p>
-          </div>
-
-          <AddToCartForm product={product} variants={variants} />
-
-          {product.fullDescription.ar && (
-            <div>
-              <h2 className="text-sm font-semibold text-ink">الوصف</h2>
-              <p className="mt-2 text-sm leading-relaxed text-ink/80">
-                {product.fullDescription.ar}
-              </p>
-            </div>
-          )}
-
-          {specEntries.length > 0 && (
-            <div>
-              <h2 className="text-sm font-semibold text-ink">المواصفات</h2>
-              <dl className="mt-2 divide-y divide-ink/10 text-sm">
-                {specEntries.map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-2">
-                    <dt className="text-ink/60">{specLabel(key)}</dt>
-                    <dd className="text-ink">{value.ar}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          )}
-        </div>
-      </div>
+      <ProductPurchasePanel product={product} variants={variants} />
 
       <RelatedProducts product={product} categorySlug={category.slug} />
     </div>

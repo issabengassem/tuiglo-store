@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Sans_Arabic, Montserrat, Lora } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -32,9 +33,24 @@ const lora = Lora({
   display: "swap",
 });
 
+const SITE_NAME = "TUIGLO";
+const SITE_DESCRIPTION = "حقائب ظهر، علب غداء، وحقائب كروس — تسوق تشكيلة تويغلو";
+
+// tuiglo.store is the confirmed, owned domain (WEBSITE_IMPLEMENTATION_PLAN.md
+// §25) — setting it here only affects how metadata URLs resolve in code; it
+// is not a deployment action.
 export const metadata: Metadata = {
-  title: "TUIGLO",
-  description: "حقائب ظهر، علب غداء، وحقائب كروس — تسوق تشكيلة توغلو",
+  metadataBase: new URL("https://tuiglo.store"),
+  title: { default: SITE_NAME, template: `%s — ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    locale: "ar_MA",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [{ url: "/brand/tuiglo_logo_primary.png", width: 2845, height: 1803, alt: SITE_NAME }],
+  },
 };
 
 export default function RootLayout({
@@ -49,9 +65,16 @@ export default function RootLayout({
       className={`${ibmPlexSansArabic.variable} ${montserrat.variable} ${lora.variable}`}
     >
       <body className="font-arabic antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-2 focus:z-50 focus:rounded-sm focus:bg-brand-brown focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-brand-offwhite"
+        >
+          تخطي إلى المحتوى
+        </a>
         <CartProvider>
+          <AnnouncementBar />
           <Header />
-          <main>{children}</main>
+          <main id="main-content">{children}</main>
           <Footer />
         </CartProvider>
       </body>
