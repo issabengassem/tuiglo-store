@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { useCart } from "@/lib/cart-context";
-import { buildOrderMessage, buildWhatsAppOrderUrl, type CustomerInfo } from "@/lib/whatsapp";
+import type { CustomerInfo } from "@/lib/whatsapp";
+import { validateCustomerInfo, type CustomerInfoErrors } from "@/lib/customer-validation";
 import { EmptyCartState } from "@/components/cart/EmptyCartState";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
-import { CustomerInfoForm, type CustomerInfoErrors } from "@/components/checkout/CustomerInfoForm";
+import { CustomerInfoForm } from "@/components/checkout/CustomerInfoForm";
 import { WhatsAppHandoff } from "@/components/checkout/WhatsAppHandoff";
 
 const EMPTY_CUSTOMER: CustomerInfo = { name: "", phone: "", address: "", city: "", notes: "" };
@@ -32,28 +33,18 @@ function readPendingOrder(): PendingOrder | null {
   }
 }
 
-function validate(customer: CustomerInfo): CustomerInfoErrors {
-  const errors: CustomerInfoErrors = {};
-  if (!customer.name.trim()) errors.name = "الاسم مطلوب";
-
-  const digitCount = customer.phone.replace(/[^0-9]/g, "").length;
-  if (!customer.phone.trim()) {
-    errors.phone = "رقم الهاتف مطلوب";
-  } else if (digitCount < 9) {
-    errors.phone = "رقم الهاتف غير صحيح";
-  }
-
-  if (!customer.city.trim()) errors.city = "المدينة مطلوبة";
-  if (!customer.address.trim()) errors.address = "العنوان مطلوب";
-
-  return errors;
-}
-
 export default function CheckoutPage() {
   const { lines, totals, clear } = useCart();
   const [customer, setCustomer] = useState<CustomerInfo>(EMPTY_CUSTOMER);
   const [errors, setErrors] = useState<CustomerInfoErrors>({});
   const [order, setOrder] = useState<PendingOrder | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  // Stable per submission attempt: the same token is reused across a
+  // double-click or a manual retry (so the server derives the same order ID
+  // and can recognize the retry), and only reset when the customer goes
+  // back to edit their info.
+  const submissionTokenRef = useRef<string | null>(null);
 
   // Hydrate a pending order from sessionStorage on mount — covers a refresh
   // that happens right after the cart cleared but before/without WhatsApp
@@ -87,16 +78,45 @@ export default function CheckoutPage() {
     );
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const validationErrors = validate(customer);
+    const validationErrors = validateCustomerInfo(customer);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
 
-    setOrder({
-      url: buildWhatsAppOrderUrl(lines, customer),
-      message: buildOrderMessage(lines, customer),
-    });
+    if (!submissionTokenRef.current) {
+      submissionTokenRef.current = crypto.randomUUID();
+    }
+
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lines, customer, submissionToken: submissionTokenRef.current }),
+      });
+      const data = await res.json().catch(() => null);
+
+      if (res.ok && data) {
+        setOrder({ url: data.whatsappUrl, message: data.whatsappMessage });
+      } else if (data?.errors) {
+        setErrors(data.errors);
+      } else {
+        setSubmitError("تعذر إرسال الطلب. حاول مرة أخرى.");
+      }
+    } catch {
+      setSubmitError("تعذر الاتصال بالخادم. تحقق من الاتصال بالإنترنت وحاول مرة أخرى.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function handleEditBack() {
+    // A fresh submission attempt (possibly with edited data) gets its own
+    // order ID rather than colliding with whatever was already submitted.
+    submissionTokenRef.current = null;
+    setOrder(null);
   }
 
   return (
@@ -107,7 +127,7 @@ export default function CheckoutPage() {
         <div className="mt-6">
           <button
             type="button"
-            onClick={() => setOrder(null)}
+            onClick={handleEditBack}
             className="mb-4 text-sm text-ink/60 hover:text-brand-brown"
           >
             ‹ تعديل المعلومات
@@ -127,11 +147,18 @@ export default function CheckoutPage() {
             الدفع عند الاستلام فقط. بعد الضغط على تأكيد الطلب ستظهر رسالة الطلب لفتحها في واتساب.
           </div>
 
+          {submitError && (
+            <p className="text-sm text-red-600" role="alert">
+              {submitError}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="h-[46px] w-full rounded-sm bg-brand-brown text-sm font-semibold text-brand-offwhite"
+            disabled={submitting}
+            className="h-[46px] w-full rounded-sm bg-brand-brown text-sm font-semibold text-brand-offwhite disabled:opacity-60"
           >
-            تأكيد الطلب عبر واتساب
+            {submitting ? "جارٍ إرسال الطلب…" : "تأكيد الطلب عبر واتساب"}
           </button>
         </form>
       )}

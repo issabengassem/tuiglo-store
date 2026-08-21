@@ -103,7 +103,7 @@ export const backpackProducts: Product[] = [
     name: { ar: "حقيبة بطبعة NIKE" },
     shortDescription: { ar: "حقيبة بطبعة NIKE وجيب أمامي مع بطاقة ." },
     fullDescription: {
-      ar: "حقيبة بطبعة NIKE متكررة، بجيب أمامي وجيوب شبكية جانبية وبطاقة NIKE معلقة على السحاب.",
+      ar: "حقيبة بطبعة NIKE متكررة، بجيب أمامي وجيوب شبكية جانبية وبطاقة NIKE  معلقة على السحاب.",
     },
     price: 95,
     specs: {},
@@ -127,7 +127,7 @@ export const backpackProducts: Product[] = [
     slug: "backpack-eastpak-purple",
     categoryId: "cat-backpacks",
     name: { ar: "حقيبة من إيستباك" },
-    shortDescription: { ar: "حقيبة أصلية من إيستباك، من مجموعة Authentic Collection." },
+    shortDescription: { ar: "حقيبة أرجوانية أصلية من إيستباك، من مجموعة Authentic Collection." },
     fullDescription: {
       ar: "حقيبة  من إيستباك (Authentic Collection)، بجيب أمامي وأحزمة كتف مبطنة ومقبض علوي.",
     },
@@ -169,7 +169,7 @@ export const backpackColorVariants: ColorVariant[] = [
   // Only "beige" has a photographed unit (it's the default/shown color) —
   // hex sampled from that real photo. The other 5 have neither a printed
   // hex nor a photo, so they stay hex:null/image:null (real chips, no fake fill).
-  { id: "cv-tuiglo-star-1", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "" }, hex: "#DAA780", images: withImage("/products/backpack-tuiglo-beige-floral-star/beige.png"), stock: "available" },
+  { id: "cv-tuiglo-star-1", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "بيج" }, hex: "#DAA780", images: withImage("/products/backpack-tuiglo-beige-floral-star/beige.png"), stock: "available" },
   { id: "cv-tuiglo-star-2", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "وردي" }, hex: "#B37172", images: withImage("/products/backpack-tuiglo-beige-floral-star/pink.png"), stock: "available" },
   { id: "cv-tuiglo-star-3", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "رمادي" }, hex: "#7A7A7A", images: withImage("/products/backpack-tuiglo-beige-floral-star/gray.png"), stock: "available" },
   { id: "cv-tuiglo-star-4", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "أزرق كحلي" }, hex: "#2D3D5E", images: withImage("/products/backpack-tuiglo-beige-floral-star/navy.png"), stock: "available" },
@@ -188,7 +188,7 @@ export const backpackColorVariants: ColorVariant[] = [
   { id: "cv-dog-badge-7", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "وردي" }, hex: "#F2A7B3", images: withImage("/products/backpack-blue-dog-badge/pink.png"), stock: "available" },
   { id: "cv-dog-badge-8", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "أخضر فاتح" }, hex: "#8FC9A3", images: withImage("/products/backpack-blue-dog-badge/light-green.png"), stock: "available" },
   { id: "cv-dog-badge-9", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "بنفسجي فاتح" }, hex: "#C8A2E0", images: withImage("/products/backpack-blue-dog-badge/light-purple.png"), stock: "available" },
-  { id: "cv-dog-badge-10", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "" }, hex: "#D9B38C", images: withImage("/products/backpack-blue-dog-badge/beige.png"), stock: "available" },
+  { id: "cv-dog-badge-10", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "بيج" }, hex: "#D9B38C", images: withImage("/products/backpack-blue-dog-badge/beige.png"), stock: "available" },
   { id: "cv-dog-badge-11", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "رمادي" }, hex: "#7A7A7A", images: withImage("/products/backpack-blue-dog-badge/gray.png"), stock: "available" },
 
   // --- backpack-nike: 7 photographed units, no printed names/hex on the

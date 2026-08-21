@@ -1,8 +1,9 @@
 "use client";
 
 import type { CustomerInfo } from "@/lib/whatsapp";
+import type { CustomerInfoErrors } from "@/lib/customer-validation";
 
-export type CustomerInfoErrors = Partial<Record<keyof CustomerInfo, string>>;
+export type { CustomerInfoErrors };
 
 interface Props {
   customer: CustomerInfo;

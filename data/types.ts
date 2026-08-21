@@ -87,5 +87,7 @@ export interface Order {
   wholesaleDiscountTotal: number;
   total: number;
   paymentMethod: "cod";
+  /** "not_applicable" for COD (no online payment collected) — kept for future CMI compatibility. */
+  paymentStatus: "not_applicable" | "pending" | "paid" | "failed";
   status: "submitted";
 }

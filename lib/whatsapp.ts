@@ -18,7 +18,7 @@ export interface CustomerInfo {
   notes?: string;
 }
 
-export function buildOrderMessage(lines: CartLine[], customer: CustomerInfo): string {
+export function buildOrderMessage(lines: CartLine[], customer: CustomerInfo, orderId: string): string {
   const totals = computeCartTotals(lines);
 
   const itemLines = lines.map((line) => {
@@ -31,6 +31,7 @@ export function buildOrderMessage(lines: CartLine[], customer: CustomerInfo): st
 
   const parts = [
     "طلب جديد من موقع TUIGLO",
+    `رقم الطلب: ${orderId}`,
     "",
     ...itemLines,
     "",
@@ -59,7 +60,7 @@ export function buildOrderMessage(lines: CartLine[], customer: CustomerInfo): st
   return parts.join("\n");
 }
 
-export function buildWhatsAppOrderUrl(lines: CartLine[], customer: CustomerInfo): string {
-  const message = buildOrderMessage(lines, customer);
+export function buildWhatsAppOrderUrl(lines: CartLine[], customer: CustomerInfo, orderId: string): string {
+  const message = buildOrderMessage(lines, customer, orderId);
   return `https://wa.me/${WHATSAPP_ORDER_NUMBER}?text=${encodeURIComponent(message)}`;
 }
