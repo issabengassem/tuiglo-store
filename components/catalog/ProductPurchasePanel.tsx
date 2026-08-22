@@ -7,6 +7,7 @@ import { formatPrice } from "@/lib/format";
 import { specLabel } from "@/lib/spec-labels";
 import { ProductImage } from "@/components/ui/ProductImage";
 import { AddToCartForm } from "./AddToCartForm";
+import { ColorSwatchSelector } from "./ColorSwatchSelector";
 
 interface Props {
   product: Product;
@@ -40,7 +41,7 @@ export function ProductPurchasePanel({ product, variants }: Props) {
 
   return (
     <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-      <div className="order-2 md:order-1">
+      <div className="md:order-1">
         <ProductImage
           src={displayImage}
           alt={
@@ -53,8 +54,15 @@ export function ProductPurchasePanel({ product, variants }: Props) {
         />
       </div>
 
-      <div className="order-1 space-y-6 text-start md:order-2">
-        <div>
+      <div className="flex flex-col gap-6 text-start md:order-2">
+        {/* Mobile: colors sit right under the image, above the title, so the
+            customer sees the product and its options before anything else.
+            Desktop keeps the original order (title/price above colors). */}
+        <div className="order-1 md:order-2">
+          <ColorSwatchSelector variants={variants} selectedId={selectedId} onSelect={setSelectedId} />
+        </div>
+
+        <div className="order-2 md:order-1">
           <h1 className="text-2xl font-bold text-ink md:text-3xl">{product.name.ar}</h1>
           <p className="mt-2 text-ink/70">{product.shortDescription.ar}</p>
           <p dir="ltr" className="mt-3 text-start text-xl font-bold text-brand-brown">
@@ -62,22 +70,19 @@ export function ProductPurchasePanel({ product, variants }: Props) {
           </p>
         </div>
 
-        <AddToCartForm
-          product={product}
-          variants={variants}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-        />
+        <div className="order-3">
+          <AddToCartForm product={product} variants={variants} selectedId={selectedId} />
+        </div>
 
         {product.fullDescription.ar && (
-          <div>
+          <div className="order-4">
             <h2 className="text-sm font-semibold text-ink">الوصف</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink/80">{product.fullDescription.ar}</p>
           </div>
         )}
 
         {specEntries.length > 0 && (
-          <div>
+          <div className="order-5">
             <h2 className="text-sm font-semibold text-ink">المواصفات</h2>
             <dl className="mt-2 divide-y divide-ink/10 text-sm">
               {specEntries.map(([key, value]) => (

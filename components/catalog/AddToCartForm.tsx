@@ -6,19 +6,18 @@ import { useCart } from "@/lib/cart-context";
 import { isPurchasable } from "@/lib/stock-labels";
 import { activeTier, unitPriceForQuantity } from "@/lib/pricing";
 import { formatPrice } from "@/lib/format";
-import { ColorSwatchSelector } from "./ColorSwatchSelector";
 import { WholesaleTierInfo } from "./WholesaleTierInfo";
 
 interface Props {
   product: Product;
   variants: ColorVariant[];
-  /** Selection is controlled by the parent (ProductPurchasePanel) so the
-   * same choice can also drive the main gallery image. */
+  /** Selection is controlled by the parent (ProductPurchasePanel) — the color
+   * swatches render there so they can sit next to the gallery image; this
+   * form only reads the current selection to price and submit the line. */
   selectedId: string | null;
-  onSelect: (id: string) => void;
 }
 
-export function AddToCartForm({ product, variants, selectedId, onSelect }: Props) {
+export function AddToCartForm({ product, variants, selectedId }: Props) {
   const { lines, addLine } = useCart();
   const [qty, setQty] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
@@ -51,8 +50,6 @@ export function AddToCartForm({ product, variants, selectedId, onSelect }: Props
 
   return (
     <div className="space-y-5">
-      <ColorSwatchSelector variants={variants} selectedId={selectedId} onSelect={onSelect} />
-
       {/* Visible before the customer touches the quantity stepper, per spec. */}
       <div>
         <p className="mb-2 text-sm font-medium text-ink">عروض الجملة</p>
