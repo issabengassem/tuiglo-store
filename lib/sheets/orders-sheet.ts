@@ -67,7 +67,37 @@ function toRow(order: Order, whatsappMessage: string): (string | number)[] {
   ];
 }
 
-export type SheetsWriteStatus = "ok" | "duplicate_skipped" | "failed";
+/**
+ * - "ok":        row appended.
+ * - "duplicate": an order with this ID already exists in the sheet. The
+ *                CALLER decides what that means (a genuine retry of an
+ *                already-recorded order vs. an accidental ID collision)
+ *                and either keeps or regenerates the ID — this function
+ *                never silently discards an order by itself.
+ * - "failed":    recording did NOT happen (auth/read/append error).
+ */
+export type SheetsWriteStatus = "ok" | "duplicate" | "failed";
+
+async function appendRow(token: string, order: Order, whatsappMessage: string): Promise<void> {
+  const range = `${SHEET_NAME}!A:P`;
+  const doAppend = () =>
+    fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId()}/values/${encodeURIComponent(range)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ values: [toRow(order, whatsappMessage)] }),
+      }
+    );
+
+  // One immediate retry for transient append failures. Safe against
+  // duplicate rows in practice: the retry only runs after a definitive
+  // non-ok response (the first append did not go through). The residual
+  // risk — a succeeded request whose response was lost — is accepted.
+  let res = await doAppend();
+  if (!res.ok) res = await doAppend();
+  if (!res.ok) throw new Error(`Sheets append failed (${res.status})`);
+}
 
 /**
  * Never throws — a Sheets failure must not block the WhatsApp handoff
@@ -79,18 +109,9 @@ export async function recordOrderInSheets(order: Order, whatsappMessage: string)
   try {
     const token = await getSheetsAccessToken();
     if (await orderIdExists(token, order.id)) {
-      return "duplicate_skipped";
+      return "duplicate";
     }
-    const range = `${SHEET_NAME}!A:P`;
-    const res = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId()}/values/${encodeURIComponent(range)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
-      {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ values: [toRow(order, whatsappMessage)] }),
-      }
-    );
-    if (!res.ok) throw new Error(`Sheets append failed (${res.status})`);
+    await appendRow(token, order, whatsappMessage);
     return "ok";
   } catch (err) {
     console.error("[orders] Google Sheets write failed:", err instanceof Error ? err.message : err);

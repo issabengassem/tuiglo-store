@@ -97,8 +97,10 @@ export function CustomerInfoForm({ customer, errors, onChange }: Props) {
           value={customer.notes ?? ""}
           onChange={(e) => set("notes", e.target.value)}
           rows={3}
+          maxLength={500}
           className="w-full rounded-sm border border-ink/20 bg-white px-3 py-2 text-sm text-ink placeholder:text-ink/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand-brown"
         />
+        {errors.notes && <p className={errorClass}>{errors.notes}</p>}
       </div>
     </div>
   );

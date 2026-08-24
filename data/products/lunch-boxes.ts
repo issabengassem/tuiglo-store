@@ -57,7 +57,7 @@ export const lunchBoxColorVariants: ColorVariant[] = [
   { id: "cv-lunchbox-pink-2", productId: "prod-lunchbox-pink-dual", colorName: { ar: "وردي غامق" }, hex: "#E87EA3", images: withImage("/products/lunchbox-pink-dual-compartment/hot-pink.png"), stock: "available" },
   { id: "cv-lunchbox-pink-3", productId: "prod-lunchbox-pink-dual", colorName: { ar: "أسود" }, hex: "#464648", images: withImage("/products/lunchbox-pink-dual-compartment/black.png"), stock: "available" },
   { id: "cv-lunchbox-pink-4", productId: "prod-lunchbox-pink-dual", colorName: { ar: "أزرق كحلي" }, hex: "#435788", images: withImage("/products/lunchbox-pink-dual-compartment/navy.png"), stock: "available" },
-  // { id: "cv-lunchbox-pink-5", productId: "prod-lunchbox-pink-dual", colorName: { ar: "بيج" }, hex: "#E3D6CB", images: withImage("/products/lunchbox-pink-dual-compartment/beige.png"), stock: "available" },
+  { id: "cv-lunchbox-pink-5", productId: "prod-lunchbox-pink-dual", colorName: { ar: "بيج" }, hex: "#E3D6CB", images: withImage("/products/lunchbox-pink-dual-compartment/beige.png"), stock: "available" },
   { id: "cv-lunchbox-pink-6", productId: "prod-lunchbox-pink-dual", colorName: { ar: "بني" }, hex: "#936654", images: withImage("/products/lunchbox-pink-dual-compartment/brown.png"), stock: "available" },
   { id: "cv-lunchbox-pink-7", productId: "prod-lunchbox-pink-dual", colorName: { ar: "رمادي" }, hex: "#D0CFD0", images: withImage("/products/lunchbox-pink-dual-compartment/gray.png"), stock: "available" },
   { id: "cv-lunchbox-pink-8", productId: "prod-lunchbox-pink-dual", colorName: { ar: "رمادي داكن" }, hex: "#919093", images: withImage("/products/lunchbox-pink-dual-compartment/dark-gray.png"), stock: "available" },

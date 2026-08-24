@@ -13,7 +13,10 @@ import { WhatsAppHandoff } from "@/components/checkout/WhatsAppHandoff";
 const EMPTY_CUSTOMER: CustomerInfo = { name: "", phone: "", address: "", city: "", notes: "" };
 const PENDING_ORDER_KEY = "tuiglo-pending-whatsapp-order";
 
-type PendingOrder = { url: string; message: string };
+type PendingOrder = { url: string; message: string; orderId?: string; recorded?: boolean };
+
+/** A stale pending order must never hijack a later checkout session. */
+const PENDING_ORDER_TTL_MS = 2 * 60 * 60 * 1000;
 
 /**
  * The cart clears the instant the customer clicks through to WhatsApp
@@ -23,14 +26,77 @@ type PendingOrder = { url: string; message: string };
  * open — still shows the same order text and a manual copy/send fallback,
  * instead of losing it. sessionStorage (not localStorage) so it doesn't
  * outlive the browser tab or bleed into an unrelated later visit.
+ *
+ * `recorded` reflects whether the server managed to write the row to
+ * Google Sheets. Entries are stamped with createdAt and validated +
+ * expired (2h) on restore, so only recent well-formed orders are ever
+ * recovered.
  */
-function readPendingOrder(): PendingOrder | null {
+function isValidWhatsAppUrl(url: unknown): url is string {
+  if (typeof url !== "string") return false;
   try {
-    const raw = window.sessionStorage.getItem(PENDING_ORDER_KEY);
-    return raw ? (JSON.parse(raw) as PendingOrder) : null;
+    const parsed = new URL(url);
+    return (
+      parsed.protocol === "https:" &&
+      (parsed.hostname === "wa.me" ||
+        parsed.hostname === "api.whatsapp.com" ||
+        parsed.hostname === "web.whatsapp.com")
+    );
+  } catch {
+    return false;
+  }
+}
+
+function discardPendingOrder(): void {
+  try {
+    window.sessionStorage.removeItem(PENDING_ORDER_KEY);
+  } catch {
+    // Storage unavailable — nothing to clean up.
+  }
+}
+
+function readPendingOrder(): PendingOrder | null {
+  let raw: string | null = null;
+  try {
+    raw = window.sessionStorage.getItem(PENDING_ORDER_KEY);
   } catch {
     return null;
   }
+  if (!raw) return null;
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    discardPendingOrder();
+    return null;
+  }
+
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    discardPendingOrder();
+    return null;
+  }
+  const p = parsed as Record<string, unknown>;
+  if (!isValidWhatsAppUrl(p.url) || typeof p.message !== "string") {
+    discardPendingOrder();
+    return null;
+  }
+  if (typeof p.orderId !== "string" || typeof p.createdAt !== "number" || !Number.isFinite(p.createdAt)) {
+    discardPendingOrder();
+    return null;
+  }
+
+  if (Date.now() - p.createdAt > PENDING_ORDER_TTL_MS) {
+    discardPendingOrder();
+    return null;
+  }
+
+  return {
+    url: p.url,
+    message: p.message,
+    orderId: p.orderId,
+    recorded: p.recorded === true,
+  };
 }
 
 export default function CheckoutPage() {
@@ -57,7 +123,10 @@ export default function CheckoutPage() {
   useEffect(() => {
     try {
       if (order) {
-        window.sessionStorage.setItem(PENDING_ORDER_KEY, JSON.stringify(order));
+        window.sessionStorage.setItem(
+          PENDING_ORDER_KEY,
+          JSON.stringify({ ...order, createdAt: Date.now() })
+        );
       } else {
         window.sessionStorage.removeItem(PENDING_ORDER_KEY);
       }
@@ -99,7 +168,12 @@ export default function CheckoutPage() {
       const data = await res.json().catch(() => null);
 
       if (res.ok && data) {
-        setOrder({ url: data.whatsappUrl, message: data.whatsappMessage });
+        setOrder({
+          url: data.whatsappUrl,
+          message: data.whatsappMessage,
+          orderId: typeof data.orderId === "string" ? data.orderId : undefined,
+          recorded: data.recorded === true,
+        });
       } else if (data?.errors) {
         setErrors(data.errors);
       } else {
@@ -132,6 +206,18 @@ export default function CheckoutPage() {
           >
             ‹ تعديل المعلومات
           </button>
+          {order.recorded === false && (
+            <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-ink">
+              <p className="font-semibold">تم استلام طلبك، لكن تعذّر تسجيله في نظام الطلبات لدينا.</p>
+              <p className="mt-1 text-ink/70">
+                احتفظ برقم الطلب{" "}
+                {order.orderId && (
+                  <span dir="ltr" className="font-semibold text-red-700">{order.orderId}</span>
+                )}{" "}
+                واذكره عند إرسال رسالة الواتساب.
+              </p>
+            </div>
+          )}
           <WhatsAppHandoff url={order.url} message={order.message} onOpenWhatsApp={clear} />
         </div>
       ) : (

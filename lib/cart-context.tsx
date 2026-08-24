@@ -11,6 +11,7 @@ import {
 import type { ReactNode } from "react";
 import type { CartLine } from "@/data/types";
 import { computeCartTotals, type CartTotals } from "./pricing";
+import { sanitizeCartLines } from "./cart-sanitize";
 
 const STORAGE_KEY = "tuiglo-cart-v1";
 
@@ -73,13 +74,16 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, dispatch] = useReducer(cartReducer, []);
 
-  // Hydrate from localStorage on mount only (client-side).
+  // Hydrate from localStorage on mount only (client-side). Stored data is
+  // untrusted: sanitizeCartLines() validates shape, quantities, and
+  // catalog references — malformed storage yields a clean cart (and the
+  // persist effect below immediately overwrites the bad entry).
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as CartLine[];
-        dispatch({ type: "HYDRATE", lines: parsed });
+        const parsed: unknown = JSON.parse(raw);
+        dispatch({ type: "HYDRATE", lines: sanitizeCartLines(parsed) });
       }
     } catch {
       // Corrupt/unavailable storage — start from an empty cart rather than throw.

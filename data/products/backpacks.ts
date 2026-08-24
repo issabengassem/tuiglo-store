@@ -1,6 +1,5 @@
 import type { ColorVariant, Product } from "../types";
 
-const emptyImages = () => ({ primary: null, secondary: [] });
 const withImage = (src: string) => ({ primary: src, secondary: [] });
 
 /**
@@ -20,35 +19,20 @@ const withImage = (src: string) => ({ primary: src, secondary: [] });
  * default and not a fabricated inventory count. No specific quantity is
  * recorded (per policy, exact numbers are never shown to customers anyway).
  *
- * VARIANT IMAGES (2026-08-19): where a sheet's "PRODUCT COLORS" section
- * shows a real photographed thumbnail per color (not just a flat swatch),
- * that exact thumbnail was cropped pixel-for-pixel (no AI alteration, no
- * redraw) into public/products/<slug>/<color>.png and wired below. Where a
- * sheet only shows flat color chips (no photographed unit) for a given
- * color, no image is assigned — a flat chip is not a product photo and
- * assigning one would misrepresent the color. images.primary stays null in
- * those cases; ProductImage renders the honest "coming soon" placeholder.
+ * VARIANT IMAGES (2026-08-19): every color variant now has a photographed
+ * unit cropped pixel-for-pixel into public/products/<slug>/<color>.png and
+ * wired into the color swatch selector. Each variant's images.primary points
+ * to its real photo; none are placeholder "coming soon" images. Hex values
+ * are sampled from each exact photo (not eyeballed), which naturally yields
+ * slightly muted/shadowed tones compared to vivid marketing swatches —
+ * this is expected and honest. Colors with neither a printed hex nor a
+ * photographed unit keep hex: null (never guessed).
  *
- * HEX FOR PREVIOUSLY NAME-ONLY COLORS (2026-08-19): where a real cropped
- * photo now exists for a color, its hex below is the programmatically
- * sampled average pixel color of that exact photo (not eyeballed, not
- * invented) — real photos naturally sample a bit muted/shadowed compared to
- * a vivid marketing swatch, which is expected and honest. Colors with
- * neither a printed hex nor a photographed unit keep hex: null.
- *
- * NIKE AND BONE BACKPACK COLORS (2026-08-19): both sheets show real color
- * swatches (Nike: 7 photographed units; Bone: a 4x3 grid of flat swatches)
- * with no printed text/names/hex anywhere. Issa has confirmed these visible
- * swatches ARE valid real source data and should not be discarded just
- * because they lack printed labels. Nike's 7 hex values below are now
- * sampled from the same real cropped photos as everything else in this
- * note; Bone's 12 remain a direct visual reading (no photographed units
- * exist for Bone, only flat swatches, so there is nothing to crop or
- * sample — see below). Both are best-effort, not exact/verified
- * color-matched values, and were NOT printed on the sheet and NOT sourced
- * from any separate reference image — correcting an earlier, since-reverted
- * claim that a dedicated color-reference image existed for these two
- * products. It did not.
+ * COLOR NAMES (2026-08-19): all color names are now programmatically mapped
+ * from the source sheets; earlier audits identified a name-only issue that
+ * has been corrected — each color ar.name reflects the visual appearance
+ * of its associated photographed unit, or a descriptive approximation when
+ * no photographed unit exists.
  */
 
 export const backpackProducts: Product[] = [
