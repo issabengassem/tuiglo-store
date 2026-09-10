@@ -26,7 +26,7 @@ export function Hero({ video, headline, subheadline, ctaLabel, ctaHref }: HeroPr
           muted
           loop
           playsInline
-          poster={video.posterSrc}
+          poster="/hero/hero_poster.png"
           aria-hidden="true"
         >
           <source src={video.srcMp4} type="video/mp4" />

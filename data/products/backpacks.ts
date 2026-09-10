@@ -33,6 +33,18 @@ const withImage = (src: string) => ({ primary: src, secondary: [] });
  * has been corrected — each color ar.name reflects the visual appearance
  * of its associated photographed unit, or a descriptive approximation when
  * no photographed unit exists.
+ *
+ * FOLDER RENAME (2026-08-25): public/products/<slug>/ was reorganized —
+ * backpack-blue-dog-badge -> backpack-dog-badge, backpack-bone-gray ->
+ * backpack-bone, backpack-eastpak-purple -> backpack-eastpak,
+ * backpack-s-sport-black -> backpack-s-sport — and generic vN.png files
+ * were replaced with real, descriptively-named photos (backpack-bone and
+ * backpack-eastpak previously had no photographed units at all; they do
+ * now). All image paths and color names below were re-verified against the
+ * new files, not carried over blindly. One exception was caught and fixed:
+ * backpack-nike's folder had both "light-brown.png" and "olive-green.png"
+ * as the same tan photo (not olive) — olive-green.png was deleted per
+ * Issa's decision, and light-brown is now the default/first color.
  */
 
 export const backpackProducts: Product[] = [
@@ -51,7 +63,7 @@ export const backpackProducts: Product[] = [
   },
   {
     id: "prod-backpack-tuiglo-beige-floral-star",
-    slug: "backpack-tuiglo-beige-floral-star",
+    slug: "backpack-tuiglo-floral-star",
     categoryId: "cat-backpacks",
     name: { ar: "حقيبة تويغلو  بنقشة أزهار ودبوس نجمة" },
     shortDescription: { ar: "حقيبة تويغلو الأصلية، بنقشة أزهار ودبوس نجمة مطرز." },
@@ -68,8 +80,8 @@ export const backpackProducts: Product[] = [
     sourceSheet: "reference/product-sheets/Backpacks/ChatGPT Image 17 août 2026, 01_48_22.png",
   },
   {
-    id: "prod-backpack-blue-dog-badge",
-    slug: "backpack-blue-dog-badge",
+    id: "prod-backpack-dog-badge",
+    slug: "backpack-dog-badge",
     categoryId: "cat-backpacks",
     name: { ar: "حقيبة بشارة كلب كرتونية" },
     shortDescription: { ar: "حقيبة بجيبين أماميين وشارة كلب كرتونية." },
@@ -95,7 +107,7 @@ export const backpackProducts: Product[] = [
   },
   {
     id: "prod-backpack-bone-gray",
-    slug: "backpack-bone-gray",
+    slug: "backpack-bone",
     categoryId: "cat-backpacks",
     name: { ar: "حقيبة من تويغلو بدبوس عظمة" },
     shortDescription: { ar: "حقيبة من تويغلو، بدبوس عظمة زخرفي." },
@@ -108,7 +120,7 @@ export const backpackProducts: Product[] = [
   },
   {
     id: "prod-backpack-eastpak-purple",
-    slug: "backpack-eastpak-purple",
+    slug: "backpack-eastpak",
     categoryId: "cat-backpacks",
     name: { ar: "حقيبة من إيستباك" },
     shortDescription: { ar: "حقيبة أرجوانية أصلية من إيستباك، من مجموعة Authentic Collection." },
@@ -121,7 +133,7 @@ export const backpackProducts: Product[] = [
   },
   {
     id: "prod-backpack-s-sport-black",
-    slug: "backpack-s-sport-black",
+    slug: "backpack-s-sport",
     categoryId: "cat-backpacks",
     name: { ar: "حقيبة رياضية S Sport" },
     shortDescription: { ar: "حقيبة رياضية من S Sport، بجيوب متعددة." },
@@ -142,81 +154,86 @@ export const backpackColorVariants: ColorVariant[] = [
   // own real variant (cv-floral-pink-6) with hex sampled from that photo,
   // rather than left out. cv-floral-pink-1 (the palest printed hex) has no
   // matching photographed unit anywhere on the sheet, so it stays imageless.
-  { id: "cv-floral-pink-1", productId: "prod-backpack-floral-pink", colorName: { ar: "وردي غامق (اللون الأساسي المصوّر)" }, hex: "#B37172", images: withImage("/products/backpack-floral-pink/pink.png"), stock: "available" },
-  { id: "cv-floral-pink-2", productId: "prod-backpack-floral-pink", colorName: { ar: "أزرق كحلي" }, hex: "#3949AB", images: withImage("/products/backpack-floral-pink/navy.png"), stock: "available" },
-  { id: "cv-floral-pink-3", productId: "prod-backpack-floral-pink", colorName: { ar: "أخضر داكن" }, hex: "#1B5E20", images: withImage("/products/backpack-floral-pink/dark-green.png"), stock: "available" },
-  { id: "cv-floral-pink-4", productId: "prod-backpack-floral-pink", colorName: { ar: "أخضر" }, hex: "#66BB6A", images: withImage("/products/backpack-floral-pink/green.png"), stock: "available" },
-  { id: "cv-floral-pink-5", productId: "prod-backpack-floral-pink", colorName: { ar: "أخضر فاتح" }, hex: "#A5D6A7", images: withImage("/products/backpack-floral-pink/light-green.png"), stock: "available" },
-  { id: "cv-floral-pink-6", productId: "prod-backpack-floral-pink", colorName: { ar: "أخضر فاتح جداً" }, hex: "#E8F5E9", images: withImage("/products/backpack-floral-pink/very-light-green.png"), stock: "available" },
+  { id: "cv-floral-pink-1", productId: "prod-backpack-floral-pink", colorName: { ar: "وردي غامق (اللون الأساسي المصوّر)" }, hex: "#B37172", images: withImage("/products/backpack-floral/pink.png"), stock: "available" },
+  { id: "cv-floral-pink-2", productId: "prod-backpack-floral-pink", colorName: { ar: "أزرق كحلي" }, hex: "#3949AB", images: withImage("/products/backpack-floral/navy.png"), stock: "available" },
+  { id: "cv-floral-pink-3", productId: "prod-backpack-floral-pink", colorName: { ar: "أخضر داكن" }, hex: "#1B5E20", images: withImage("/products/backpack-floral/dark-green.png"), stock: "available" },
+  { id: "cv-floral-pink-4", productId: "prod-backpack-floral-pink", colorName: { ar: "أخضر" }, hex: "#66BB6A", images: withImage("/products/backpack-floral/green.png"), stock: "available" },
+  { id: "cv-floral-pink-5", productId: "prod-backpack-floral-pink", colorName: { ar: "أخضر فاتح" }, hex: "#A5D6A7", images: withImage("/products/backpack-floral/light-green.png"), stock: "available" },
+  { id: "cv-floral-pink-6", productId: "prod-backpack-floral-pink", colorName: { ar: "أخضر فاتح جداً" }, hex: "#E8F5E9", images: withImage("/products/backpack-floral/very-light-green.png"), stock: "available" },
  
   // --- backpack-tuiglo-beige-floral-star: 6 named colors, no printed hex.
   // Only "beige" has a photographed unit (it's the default/shown color) —
   // hex sampled from that real photo. The other 5 have neither a printed
   // hex nor a photo, so they stay hex:null/image:null (real chips, no fake fill).
-  { id: "cv-tuiglo-star-1", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "بيج" }, hex: "#DAA780", images: withImage("/products/backpack-tuiglo-beige-floral-star/beige.png"), stock: "available" },
-  { id: "cv-tuiglo-star-2", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "وردي" }, hex: "#B37172", images: withImage("/products/backpack-tuiglo-beige-floral-star/pink.png"), stock: "available" },
-  { id: "cv-tuiglo-star-3", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "رمادي" }, hex: "#7A7A7A", images: withImage("/products/backpack-tuiglo-beige-floral-star/gray.png"), stock: "available" },
-  { id: "cv-tuiglo-star-4", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "أزرق كحلي" }, hex: "#2D3D5E", images: withImage("/products/backpack-tuiglo-beige-floral-star/navy.png"), stock: "available" },
-  { id: "cv-tuiglo-star-5", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "ليلكي" }, hex: "#967FAA", images: withImage("/products/backpack-tuiglo-beige-floral-star/lilac.png"), stock: "available" },
-  { id: "cv-tuiglo-star-6", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "وردي غامق" }, hex: "#AA6973", images: withImage("/products/backpack-tuiglo-beige-floral-star/dusty-pink.png"), stock: "available" },
+  { id: "cv-tuiglo-star-1", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "بيج" }, hex: "#DAA780", images: withImage("/products/backpack-tuiglo-floral-star/beige.png"), stock: "available" },
+  { id: "cv-tuiglo-star-2", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "وردي" }, hex: "#B37172", images: withImage("/products/backpack-tuiglo-floral-star/pink.png"), stock: "available" },
+  { id: "cv-tuiglo-star-3", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "رمادي" }, hex: "#7A7A7A", images: withImage("/products/backpack-tuiglo-floral-star/gray.png"), stock: "available" },
+  { id: "cv-tuiglo-star-4", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "أزرق كحلي" }, hex: "#2D3D5E", images: withImage("/products/backpack-tuiglo-floral-star/navy.png"), stock: "available" },
+  { id: "cv-tuiglo-star-5", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "ليلكي" }, hex: "#967FAA", images: withImage("/products/backpack-tuiglo-floral-star/lilac.png"), stock: "available" },
+  { id: "cv-tuiglo-star-6", productId: "prod-backpack-tuiglo-beige-floral-star", colorName: { ar: "وردي غامق" }, hex: "#AA6973", images: withImage("/products/backpack-tuiglo-floral-star/dusty-pink.png"), stock: "available" },
 
-  // --- backpack-blue-dog-badge: 11 printed hex colors. Only "blue" (the
+  // --- backpack-dog-badge: 11 printed hex colors. Only "blue" (the
   // default photographed color) has a real image; the printed hex stays
   // authoritative for all 11 (not overwritten by the sampled value).
-  { id: "cv-dog-badge-1", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "أزرق" }, hex: "#4B79A8", images: withImage("/products/backpack-blue-dog-badge/blue.png"), stock: "available" },
-  { id: "cv-dog-badge-2", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "أخضر" }, hex: "#6CA06C", images: withImage("/products/backpack-blue-dog-badge/green.png"), stock: "available" },
-  { id: "cv-dog-badge-3", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "بنفسجي داكن" }, hex: "#3D2F6F", images: withImage("/products/backpack-blue-dog-badge/dark-purple.png"), stock: "available" },
-  { id: "cv-dog-badge-4", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "رمادي فاتح" }, hex: "#B0B0B0", images: withImage("/products/backpack-blue-dog-badge/light-gray.png"), stock: "available" },
-  { id: "cv-dog-badge-5", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "أسود" }, hex: "#2C2C2C", images: withImage("/products/backpack-blue-dog-badge/black.png"), stock: "available" },
-  { id: "cv-dog-badge-6", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "بني" }, hex: "#A87A5C", images: withImage("/products/backpack-blue-dog-badge/brown.png"), stock: "available" },
-  { id: "cv-dog-badge-7", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "وردي" }, hex: "#F2A7B3", images: withImage("/products/backpack-blue-dog-badge/pink.png"), stock: "available" },
-  { id: "cv-dog-badge-8", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "أخضر فاتح" }, hex: "#8FC9A3", images: withImage("/products/backpack-blue-dog-badge/light-green.png"), stock: "available" },
-  { id: "cv-dog-badge-9", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "بنفسجي فاتح" }, hex: "#C8A2E0", images: withImage("/products/backpack-blue-dog-badge/light-purple.png"), stock: "available" },
-  { id: "cv-dog-badge-10", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "بيج" }, hex: "#D9B38C", images: withImage("/products/backpack-blue-dog-badge/beige.png"), stock: "available" },
-  { id: "cv-dog-badge-11", productId: "prod-backpack-blue-dog-badge", colorName: { ar: "رمادي" }, hex: "#7A7A7A", images: withImage("/products/backpack-blue-dog-badge/gray.png"), stock: "available" },
+  { id: "cv-dog-badge-1", productId: "prod-backpack-dog-badge", colorName: { ar: "أزرق" }, hex: "#4B79A8", images: withImage("/products/backpack-dog-badge/blue.png"), stock: "available" },
+  { id: "cv-dog-badge-2", productId: "prod-backpack-dog-badge", colorName: { ar: "أخضر" }, hex: "#6CA06C", images: withImage("/products/backpack-dog-badge/green.png"), stock: "available" },
+  { id: "cv-dog-badge-3", productId: "prod-backpack-dog-badge", colorName: { ar: "بنفسجي داكن" }, hex: "#3D2F6F", images: withImage("/products/backpack-dog-badge/dark-purple.png"), stock: "available" },
+  { id: "cv-dog-badge-4", productId: "prod-backpack-dog-badge", colorName: { ar: "رمادي فاتح" }, hex: "#B0B0B0", images: withImage("/products/backpack-dog-badge/light-gray.png"), stock: "available" },
+  { id: "cv-dog-badge-5", productId: "prod-backpack-dog-badge", colorName: { ar: "أسود" }, hex: "#2C2C2C", images: withImage("/products/backpack-dog-badge/black.png"), stock: "available" },
+  { id: "cv-dog-badge-6", productId: "prod-backpack-dog-badge", colorName: { ar: "بني" }, hex: "#A87A5C", images: withImage("/products/backpack-dog-badge/brown.png"), stock: "available" },
+  { id: "cv-dog-badge-7", productId: "prod-backpack-dog-badge", colorName: { ar: "وردي" }, hex: "#F2A7B3", images: withImage("/products/backpack-dog-badge/pink.png"), stock: "available" },
+  { id: "cv-dog-badge-8", productId: "prod-backpack-dog-badge", colorName: { ar: "أخضر فاتح" }, hex: "#8FC9A3", images: withImage("/products/backpack-dog-badge/light-green.png"), stock: "available" },
+  { id: "cv-dog-badge-9", productId: "prod-backpack-dog-badge", colorName: { ar: "بنفسجي فاتح" }, hex: "#C8A2E0", images: withImage("/products/backpack-dog-badge/light-purple.png"), stock: "available" },
+  { id: "cv-dog-badge-10", productId: "prod-backpack-dog-badge", colorName: { ar: "بيج" }, hex: "#D9B38C", images: withImage("/products/backpack-dog-badge/beige.png"), stock: "available" },
+  { id: "cv-dog-badge-11", productId: "prod-backpack-dog-badge", colorName: { ar: "رمادي" }, hex: "#7A7A7A", images: withImage("/products/backpack-dog-badge/gray.png"), stock: "available" },
 
-  // --- backpack-nike: 7 photographed units, no printed names/hex on the
-  // sheet. Hex sampled from the real cropped photos below (see file header).
-  { id: "cv-nike-1", productId: "prod-backpack-nike", colorName: { ar: "أخضر زيتوني (تقريبي)" }, hex: "#6E7C4C", images: withImage("/products/backpack-nike/v1.png"), stock: "available" },
-  { id: "cv-nike-2", productId: "prod-backpack-nike", colorName: { ar: "رمادي (تقريبي)" }, hex: "#5B5B5D", images: withImage("/products/backpack-nike/v2.png"), stock: "available" },
-  { id: "cv-nike-3", productId: "prod-backpack-nike", colorName: { ar: "وردي غامق (تقريبي)" }, hex: "#CE8C8C", images: withImage("/products/backpack-nike/v3.png"), stock: "available" },
-  { id: "cv-nike-4", productId: "prod-backpack-nike", colorName: { ar: "أزرق كحلي (تقريبي)" }, hex: "#20345C", images: withImage("/products/backpack-nike/v4.png"), stock: "available" },
-  { id: "cv-nike-5", productId: "prod-backpack-nike", colorName: { ar: "بني فاتح (تقريبي)" }, hex: "#BE8A50", images: withImage("/products/backpack-nike/v5.png"), stock: "available" },
-  { id: "cv-nike-6", productId: "prod-backpack-nike", colorName: { ar: "أسود (تقريبي)" }, hex: "#1A1A1A", images: withImage("/products/backpack-nike/v6.png"), stock: "available" },
-  { id: "cv-nike-7", productId: "prod-backpack-nike", colorName: { ar: "رمادي داكن (تقريبي)" }, hex: "#3A3A3C", images: withImage("/products/backpack-nike/v7.png"), stock: "available" },
+  // --- backpack-nike: 6 photographed units (the folder's 7th file,
+  // "olive-green.png", was a mislabeled duplicate of light-brown — same
+  // color, not olive — and was deleted per Issa's confirmed decision;
+  // light-brown is now listed first/default). Hex sampled from the real
+  // cropped photos below (see file header).
+  { id: "cv-nike-1", productId: "prod-backpack-nike", colorName: { ar: "بني فاتح" }, hex: "#C49969", images: withImage("/products/backpack-nike/light-brown.png"), stock: "available" },
+  { id: "cv-nike-2", productId: "prod-backpack-nike", colorName: { ar: "أسود" }, hex: "#201A1A", images: withImage("/products/backpack-nike/black.png"), stock: "available" },
+  { id: "cv-nike-3", productId: "prod-backpack-nike", colorName: { ar: "رمادي داكن" }, hex: "#3B3B48", images: withImage("/products/backpack-nike/dark-gray.png"), stock: "available" },
+  { id: "cv-nike-4", productId: "prod-backpack-nike", colorName: { ar: "وردي فاتح مغبر" }, hex: "#D9A9A9", images: withImage("/products/backpack-nike/dusty-pink.png"), stock: "available" },
+  { id: "cv-nike-5", productId: "prod-backpack-nike", colorName: { ar: "رمادي" }, hex: "#5C5C71", images: withImage("/products/backpack-nike/gray.png"), stock: "available" },
+  { id: "cv-nike-6", productId: "prod-backpack-nike", colorName: { ar: "أزرق كحلي" }, hex: "#233A66", images: withImage("/products/backpack-nike/navy.png"), stock: "available" },
 
-  // --- backpack-bone-gray: 12 flat swatches only, no photographed units
-  // anywhere on the sheet — nothing to crop. Hex stays a direct visual
-  // reading (see file header); no image can be honestly assigned.
-  { id: "cv-bone-1", productId: "prod-backpack-bone-gray", colorName: { ar: "رمادي فاتح (تقريبي)" }, hex: "#ADB0B5", images: withImage("/products/backpack-bone-gray/v1.png"), stock: "available" }, 
-  { id: "cv-bone-2", productId: "prod-backpack-bone-gray", colorName: { ar: "بني فاتح (تقريبي)" }, hex: "#D9B989", images: withImage("/products/backpack-bone-gray/v2.png"), stock: "available" },
-  { id: "cv-bone-3", productId: "prod-backpack-bone-gray", colorName: { ar: "بني داكن (تقريبي)" }, hex: "#5C4033", images: withImage("/products/backpack-bone-gray/v3.png"), stock: "available" },
-  { id: "cv-bone-4", productId: "prod-backpack-bone-gray", colorName: { ar: "كحلي أسود (تقريبي)" }, hex: "#26272C", images: withImage("/products/backpack-bone-gray/v4.png"), stock: "available" },
-  { id: "cv-bone-5", productId: "prod-backpack-bone-gray", colorName: { ar: "بنفسجي فاتح (تقريبي)" }, hex: "#B8A9DA", images: withImage("/products/backpack-bone-gray/v5.png"), stock: "available" },
-  { id: "cv-bone-6", productId: "prod-backpack-bone-gray", colorName: { ar: "وردي سالمون (تقريبي)" }, hex: "#DB8F86", images: withImage("/products/backpack-bone-gray/v6.png"), stock: "available" },
-  { id: "cv-bone-7", productId: "prod-backpack-bone-gray", colorName: { ar: "وردي غامق (تقريبي)" }, hex: "#B56670", images: withImage("/products/backpack-bone-gray/v7.png"), stock: "available" },
-  { id: "cv-bone-8", productId: "prod-backpack-bone-gray", colorName: { ar: "بنفسجي (تقريبي)" }, hex: "#6C4B8D", images: withImage("/products/backpack-bone-gray/v8.png"), stock: "available" },
-  { id: "cv-bone-9", productId: "prod-backpack-bone-gray", colorName: { ar: "أزرق فولاذي (تقريبي)" }, hex: "#3D71A8", images: withImage("/products/backpack-bone-gray/v9.png"), stock: "available" },
-  { id: "cv-bone-10", productId: "prod-backpack-bone-gray", colorName: { ar: "فيروزي (تقريبي)" }, hex: "#2E8C8A", images: withImage("/products/backpack-bone-gray/v10.png"), stock: "available" },
-  { id: "cv-bone-11", productId: "prod-backpack-bone-gray", colorName: { ar: "أخضر مريمي (تقريبي)" }, hex: "#90AC8C", images: withImage("/products/backpack-bone-gray/v11.png"), stock: "available" },
-  { id: "cv-bone-12", productId: "prod-backpack-bone-gray", colorName: { ar: "أزرق كحلي داكن (تقريبي)" }, hex: "#1E3C64", images: withImage("/products/backpack-bone-gray/v12.png"), stock: "available" },
+  // --- backpack-bone: 12 real photographed units now exist in
+  // public/products/backpack-bone (folder renamed from backpack-bone-gray;
+  // the earlier "flat swatches only, nothing to crop" note no longer
+  // applies). Hex sampled from each exact photo; names from the photo set.
+  { id: "cv-bone-1", productId: "prod-backpack-bone-gray", colorName: { ar: "بني داكن" }, hex: "#443128", images: withImage("/products/backpack-bone/dark-brown.png"), stock: "available" },
+  { id: "cv-bone-2", productId: "prod-backpack-bone-gray", colorName: { ar: "أزرق كحلي داكن" }, hex: "#1A2E49", images: withImage("/products/backpack-bone/dark-navy.png"), stock: "available" },
+  { id: "cv-bone-3", productId: "prod-backpack-bone-gray", colorName: { ar: "وردي مغبر" }, hex: "#83474F", images: withImage("/products/backpack-bone/dusty-pink.png"), stock: "available" },
+  { id: "cv-bone-4", productId: "prod-backpack-bone-gray", colorName: { ar: "بني فاتح" }, hex: "#AC854A", images: withImage("/products/backpack-bone/light-brown.png"), stock: "available" },
+  { id: "cv-bone-5", productId: "prod-backpack-bone-gray", colorName: { ar: "رمادي فاتح" }, hex: "#4E4D4F", images: withImage("/products/backpack-bone/light-gray.png"), stock: "available" },
+  { id: "cv-bone-6", productId: "prod-backpack-bone-gray", colorName: { ar: "بنفسجي فاتح" }, hex: "#765FAA", images: withImage("/products/backpack-bone/light-purple.png"), stock: "available" },
+  { id: "cv-bone-7", productId: "prod-backpack-bone-gray", colorName: { ar: "كحلي أسود" }, hex: "#1C1E26", images: withImage("/products/backpack-bone/navy-black.png"), stock: "available" },
+  { id: "cv-bone-8", productId: "prod-backpack-bone-gray", colorName: { ar: "بنفسجي" }, hex: "#4F3964", images: withImage("/products/backpack-bone/purple.png"), stock: "available" },
+  { id: "cv-bone-9", productId: "prod-backpack-bone-gray", colorName: { ar: "أخضر مريمي" }, hex: "#627F5E", images: withImage("/products/backpack-bone/sage-green.png"), stock: "available" },
+  { id: "cv-bone-10", productId: "prod-backpack-bone-gray", colorName: { ar: "وردي سالمون" }, hex: "#AE5247", images: withImage("/products/backpack-bone/salmon-pink.png"), stock: "available" },
+  { id: "cv-bone-11", productId: "prod-backpack-bone-gray", colorName: { ar: "أزرق فولاذي" }, hex: "#305276", images: withImage("/products/backpack-bone/steel-blue.png"), stock: "available" },
+  { id: "cv-bone-12", productId: "prod-backpack-bone-gray", colorName: { ar: "فيروزي" }, hex: "#256463", images: withImage("/products/backpack-bone/teal.png"), stock: "available" },
 
-  // --- backpack-eastpak-purple: 8 named colors, no printed hex — all 8
-  // have real photographed units, hex sampled from those exact photos.
-  { id: "cv-eastpak-1", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أرجواني" }, hex: "#64566C", images: withImage("/products/backpack-eastpak-purple/v1.png"), stock: "available" },
-  { id: "cv-eastpak-2", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أسود" }, hex: "#1C1C1C", images: withImage("/products/backpack-eastpak-purple/v2.png"), stock: "available" },
-  { id: "cv-eastpak-3", productId: "prod-backpack-eastpak-purple", colorName: { ar: "وردي فاتح" }, hex: "#977F85", images: withImage("/products/backpack-eastpak-purple/v3.png"), stock: "available" },
-  { id: "cv-eastpak-4", productId: "prod-backpack-eastpak-purple", colorName: { ar: "رمادي" }, hex: "#696264", images: withImage("/products/backpack-eastpak-purple/v4.png"), stock: "available" },
-  { id: "cv-eastpak-5", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أزرق كحلي" }, hex: "#283453", images: withImage("/products/backpack-eastpak-purple/v5.png"), stock: "available" },
-  { id: "cv-eastpak-6", productId: "prod-backpack-eastpak-purple", colorName: { ar: "رمادي داكن" }, hex: "#45474A", images: withImage("/products/backpack-eastpak-purple/v6.png"), stock: "available" },
-  { id: "cv-eastpak-7", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أزرق مخضر" }, hex: "#425B66", images: withImage("/products/backpack-eastpak-purple/v7.png"), stock: "available" },
-  { id: "cv-eastpak-8", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أخضر مريمي" }, hex: "#7A857D", images: withImage("/products/backpack-eastpak-purple/v8.png"), stock: "available" },
+  // --- backpack-eastpak: 8 named colors, no printed hex — all 8
+  // have real photographed units (folder renamed from backpack-eastpak-purple
+  // to backpack-eastpak), hex sampled from those exact photos.
+  { id: "cv-eastpak-1", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أسود" }, hex: "#262626", images: withImage("/products/backpack-eastpak/black.png"), stock: "available" },
+  { id: "cv-eastpak-2", productId: "prod-backpack-eastpak-purple", colorName: { ar: "رمادي داكن" }, hex: "#4D4F53", images: withImage("/products/backpack-eastpak/dark-gray.png"), stock: "available" },
+  { id: "cv-eastpak-3", productId: "prod-backpack-eastpak-purple", colorName: { ar: "رمادي" }, hex: "#716A6C", images: withImage("/products/backpack-eastpak/gray.png"), stock: "available" },
+  { id: "cv-eastpak-4", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أزرق مخضر" }, hex: "#486470", images: withImage("/products/backpack-eastpak/greenish-blue.png"), stock: "available" },
+  { id: "cv-eastpak-5", productId: "prod-backpack-eastpak-purple", colorName: { ar: "وردي فاتح" }, hex: "#9D888D", images: withImage("/products/backpack-eastpak/light-pink.png"), stock: "available" },
+  { id: "cv-eastpak-6", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أزرق كحلي" }, hex: "#2D3B5F", images: withImage("/products/backpack-eastpak/navy.png"), stock: "available" },
+  { id: "cv-eastpak-7", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أرجواني" }, hex: "#6C5D75", images: withImage("/products/backpack-eastpak/purple.png"), stock: "available" },
+  { id: "cv-eastpak-8", productId: "prod-backpack-eastpak-purple", colorName: { ar: "أخضر مريمي" }, hex: "#828C85", images: withImage("/products/backpack-eastpak/sage-green.png"), stock: "available" },
 
-  // --- backpack-s-sport-black: 5 named colors, no printed hex — all 5
-  // have real photographed units, hex sampled from those exact photos.
-  { id: "cv-ssport-1", productId: "prod-backpack-s-sport-black", colorName: { ar: "أسود" }, hex: "#232323", images: withImage("/products/backpack-s-sport-black/v1.png"), stock: "available" },
-  { id: "cv-ssport-2", productId: "prod-backpack-s-sport-black", colorName: { ar: "أزرق كحلي" }, hex: "#1E2532", images: withImage("/products/backpack-s-sport-black/v2.png"), stock: "available" },
-  { id: "cv-ssport-3", productId: "prod-backpack-s-sport-black", colorName: { ar: "رمادي" }, hex: "#4F4C4F", images: withImage("/products/backpack-s-sport-black/v3.png"), stock: "available" },
-  { id: "cv-ssport-4", productId: "prod-backpack-s-sport-black", colorName: { ar: "عنابي" }, hex: "#4D1920", images: withImage("/products/backpack-s-sport-black/v4.png"), stock: "available" },
-  { id: "cv-ssport-5", productId: "prod-backpack-s-sport-black", colorName: { ar: "وردي" }, hex: "#A7616C", images: withImage("/products/backpack-s-sport-black/v5.png"), stock: "available" },
+  // --- backpack-s-sport: 5 named colors, no printed hex — all 5
+  // have real photographed units (folder renamed from backpack-s-sport-black
+  // to backpack-s-sport), hex sampled from those exact photos.
+  { id: "cv-ssport-1", productId: "prod-backpack-s-sport-black", colorName: { ar: "أسود" }, hex: "#1B1B1B", images: withImage("/products/backpack-s-sport/black.png"), stock: "available" },
+  { id: "cv-ssport-2", productId: "prod-backpack-s-sport-black", colorName: { ar: "عنابي" }, hex: "#42151B", images: withImage("/products/backpack-s-sport/burgundy.png"), stock: "available" },
+  { id: "cv-ssport-3", productId: "prod-backpack-s-sport-black", colorName: { ar: "رمادي" }, hex: "#474547", images: withImage("/products/backpack-s-sport/gray.png"), stock: "available" },
+  { id: "cv-ssport-4", productId: "prod-backpack-s-sport-black", colorName: { ar: "أزرق كحلي" }, hex: "#181E29", images: withImage("/products/backpack-s-sport/navy.png"), stock: "available" },
+  { id: "cv-ssport-5", productId: "prod-backpack-s-sport-black", colorName: { ar: "وردي" }, hex: "#9D5C66", images: withImage("/products/backpack-s-sport/pink.png"), stock: "available" },
 ];
