@@ -18,8 +18,14 @@ export interface CustomerInfo {
   notes?: string;
 }
 
-export function buildOrderMessage(lines: CartLine[], customer: CustomerInfo, orderId: string): string {
+export function buildOrderMessage(
+  lines: CartLine[],
+  customer: CustomerInfo,
+  orderId: string,
+  shippingCost: number = 15
+): string {
   const totals = computeCartTotals(lines);
+  const finalTotal = totals.total + shippingCost;
 
   const itemLines = lines.map((line) => {
     const product = getProductById(line.productId);
@@ -43,7 +49,8 @@ export function buildOrderMessage(lines: CartLine[], customer: CustomerInfo, ord
   }
 
   parts.push(
-    `الإجمالي: ${formatPrice(totals.total)}`,
+    `الشحن (${shippingCost === 15 ? "الدار البيضاء" : "خارج الدار البيضاء"}): ${formatPrice(shippingCost)}`,
+    `الإجمالي: ${formatPrice(finalTotal)}`,
     "",
     `الاسم: ${customer.name}`,
     `الهاتف: ${customer.phone}`,
@@ -60,7 +67,12 @@ export function buildOrderMessage(lines: CartLine[], customer: CustomerInfo, ord
   return parts.join("\n");
 }
 
-export function buildWhatsAppOrderUrl(lines: CartLine[], customer: CustomerInfo, orderId: string): string {
-  const message = buildOrderMessage(lines, customer, orderId);
+export function buildWhatsAppOrderUrl(
+  lines: CartLine[],
+  customer: CustomerInfo,
+  orderId: string,
+  shippingCost: number = 15
+): string {
+  const message = buildOrderMessage(lines, customer, orderId, shippingCost);
   return `https://wa.me/${WHATSAPP_ORDER_NUMBER}?text=${encodeURIComponent(message)}`;
 }

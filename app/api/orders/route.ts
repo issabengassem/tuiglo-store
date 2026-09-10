@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { CartLine, Order } from "@/data/types";
 import { getColorVariantById, getProductById } from "@/data/products";
-import { computeCartTotals } from "@/lib/pricing";
+import { computeCartTotals, computeShippingCost } from "@/lib/pricing";
 import { buildOrderMessage, buildWhatsAppOrderUrl, type CustomerInfo } from "@/lib/whatsapp";
 import { validateCustomerInfo } from "@/lib/customer-validation";
 import { generateOrderId } from "@/lib/order-id";
@@ -11,6 +11,7 @@ import { getClientIp, isRateLimited } from "@/lib/rate-limit";
 interface OrderRequestBody {
   lines: CartLine[];
   customer: CustomerInfo;
+  shippingCost?: number;
   submissionToken: string;
 }
 
@@ -110,6 +111,11 @@ export async function POST(request: Request) {
   // via the same lib/pricing.ts used everywhere else — the client's subtotal/
   // discount/total/unit prices are never read or trusted here.
   const totals = computeCartTotals(lines);
+  const shippingCost =
+    typeof body.shippingCost === "number" && (body.shippingCost === 15 || body.shippingCost === 25)
+      ? body.shippingCost
+      : computeShippingCost(customer.city);
+  const finalTotal = totals.total + shippingCost;
 
   const seen = recentSubmissions.get(submissionToken);
   const now = Date.now();
@@ -126,8 +132,8 @@ export async function POST(request: Request) {
       // and try again — never silently discard this legitimate order.
       orderId = generateOrderId(submissionToken, new Date(), crypto.randomUUID());
     }
-    whatsappMessage = buildOrderMessage(lines, customer, orderId);
-    whatsappUrl = buildWhatsAppOrderUrl(lines, customer, orderId);
+    whatsappMessage = buildOrderMessage(lines, customer, orderId, shippingCost);
+    whatsappUrl = buildWhatsAppOrderUrl(lines, customer, orderId, shippingCost);
 
     const order: Order = {
       id: orderId,
@@ -150,7 +156,8 @@ export async function POST(request: Request) {
       }),
       subtotal: totals.subtotal,
       wholesaleDiscountTotal: totals.wholesaleDiscountTotal,
-      total: totals.total,
+      shippingCost,
+      total: finalTotal,
       paymentMethod: "cod",
       paymentStatus: "not_applicable",
       status: "submitted",

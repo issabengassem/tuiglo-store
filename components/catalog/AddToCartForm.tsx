@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { ColorVariant, Product } from "@/data/types";
 import { useCart } from "@/lib/cart-context";
 import { isPurchasable } from "@/lib/stock-labels";
@@ -18,6 +20,7 @@ interface Props {
 }
 
 export function AddToCartForm({ product, variants, selectedId }: Props) {
+  const router = useRouter();
   const { lines, addLine } = useCart();
   const [qty, setQty] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
@@ -45,7 +48,13 @@ export function AddToCartForm({ product, variants, selectedId }: Props) {
     if (!selectedVariant || !canAdd) return;
     addLine({ productId: product.id, colorVariantId: selectedVariant.id, qty });
     setJustAdded(true);
-    setTimeout(() => setJustAdded(false), 2500);
+    setTimeout(() => setJustAdded(false), 5000);
+  }
+
+  function handleBuyNow() {
+    if (!selectedVariant || !canAdd) return;
+    addLine({ productId: product.id, colorVariantId: selectedVariant.id, qty });
+    router.push("/checkout");
   }
 
   return (
@@ -113,20 +122,74 @@ export function AddToCartForm({ product, variants, selectedId }: Props) {
         )}
       </div>
 
-      <button
-        type="button"
-        onClick={handleAdd}
-        disabled={!canAdd}
-        className="h-[46px] w-full rounded-sm bg-brand-brown text-sm font-semibold text-brand-offwhite transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        أضف إلى السلة
-      </button>
+      <div className="flex flex-col gap-3">
+        {/* زر إتمام الطلب مباشرة والشراء الفوري */}
+        <button
+          type="button"
+          onClick={handleBuyNow}
+          disabled={!canAdd}
+          className="flex h-[48px] w-full items-center justify-center gap-2 rounded-sm bg-brand-brown text-sm font-bold text-brand-offwhite shadow-sm transition-all hover:bg-brand-brown/90 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <span>اشتري الآن (إتمام الطلب)</span>
+          <span className="text-xs font-normal opacity-90">• الدفع عند الاستلام</span>
+        </button>
 
-      {/* aria-live region announces the confirmation to screen readers
-          reliably — a re-rendered button label alone isn't always announced. */}
-      <p role="status" aria-live="polite" className="text-sm font-medium text-brand-brown">
-        {justAdded ? "تمت الإضافة إلى السلة" : ""}
-      </p>
+        {/* زر أضف إلى السلة لإضافة منتجات أخرى ومتابعة التسوق */}
+        <button
+          type="button"
+          onClick={handleAdd}
+          disabled={!canAdd}
+          className="flex h-[46px] w-full items-center justify-center gap-2 rounded-sm border-2 border-brand-brown bg-white text-sm font-bold text-brand-brown transition-all hover:bg-brand-cream/50 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          <span>أضف إلى السلة</span>
+        </button>
+
+        {lines.length > 0 && (
+          <Link
+            href="/cart"
+            className="flex items-center justify-center gap-1.5 py-1 text-xs font-medium text-ink/70 hover:text-brand-brown transition-colors"
+          >
+            <span>معاينة محتويات السلة ({lines.reduce((s, l) => s + l.qty, 0)} قطعة)</span>
+            <span>←</span>
+          </Link>
+        )}
+      </div>
+
+      {/* تنبيه تأكيد الإضافة ورابط الذهاب إلى السلة */}
+      {justAdded && (
+        <div className="flex items-center justify-between rounded-md border border-brand-brown/20 bg-brand-cream/60 p-3 text-xs text-ink">
+          <span className="font-medium text-brand-brown">✓ تمت إضافة المنتج إلى سلتك</span>
+          <div className="flex items-center gap-2.5">
+            <Link
+              href="/cart"
+              className="font-semibold text-brand-brown underline hover:text-brand-brown/80"
+            >
+              الذهاب إلى السلة
+            </Link>
+            <span className="text-ink/30">•</span>
+            <Link
+              href="/checkout"
+              className="rounded bg-brand-brown px-2.5 py-1 font-semibold text-brand-offwhite hover:bg-brand-brown/90"
+            >
+              إتمام الطلب
+            </Link>
+          </div>
+        </div>
+      )}
 
       {!selectedVariant && variants.length > 0 && (
         <p className="text-xs text-ink/60">اختر لوناً متوفراً لإضافة المنتج إلى السلة.</p>

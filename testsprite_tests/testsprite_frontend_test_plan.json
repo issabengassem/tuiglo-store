@@ -1,0 +1,551 @@
+[
+  {
+    "id": "TC001",
+    "title": "Enter checkout details and place a cash-on-delivery order",
+    "description": "This verifies that a guest shopper can complete checkout, review totals, and submit a cash-on-delivery order successfully.",
+    "category": "Order Placement & Checkout",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Open the cart"
+      },
+      {
+        "type": "action",
+        "description": "Proceed to checkout"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the full name field with a valid name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with a valid email address"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone field with a valid phone number"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the address field with a valid shipping address"
+      },
+      {
+        "type": "action",
+        "description": "Select a shipping method"
+      },
+      {
+        "type": "action",
+        "description": "Place the order"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the order summary shows subtotal, shipping, and total"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the order confirmation screen is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Add a product to the cart from its detail page",
+    "description": "This verifies that a shopper can add a product from the detail page and see the cart indicator update.",
+    "category": "Shopping Cart Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the cart indicator updates"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the item is added to the cart"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Review cart contents and proceed to checkout",
+    "description": "This verifies that a shopper can open the cart after adding an item, review the subtotal, and continue to checkout.",
+    "category": "Shopping Cart Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Open the cart"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the cart item list is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the subtotal is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Use the app in RTL Arabic layout",
+    "description": "This verifies that an Arabic-speaking customer can browse categories, open products, and move through cart and checkout in the RTL layout.",
+    "category": "Product Browsing & Category Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Open the cart"
+      },
+      {
+        "type": "action",
+        "description": "Proceed to checkout"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the interface is displayed in an RTL layout"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify category, product, cart, and checkout content remain accessible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Browse a category and open a product page",
+    "description": "This verifies that a guest shopper can start on the homepage, enter a category, and open a product detail page with item information available.",
+    "category": "Product Browsing & Category Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify product images are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify product specifications and pricing are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Increase and decrease cart quantity",
+    "description": "This verifies that a shopper can adjust an item's quantity in the cart and see the cart totals update.",
+    "category": "Shopping Cart Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Open the cart"
+      },
+      {
+        "type": "action",
+        "description": "Increase the item quantity"
+      },
+      {
+        "type": "action",
+        "description": "Decrease the item quantity"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated quantity is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the subtotal reflects the quantity change"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Move between categories from the homepage",
+    "description": "This verifies that a shopper can navigate across the three catalog categories and continue browsing products in each one.",
+    "category": "Product Browsing & Category Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the first category card"
+      },
+      {
+        "type": "action",
+        "description": "Return to the homepage category browsing area"
+      },
+      {
+        "type": "action",
+        "description": "Click a different category card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a category product listing is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify products are available for browsing"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Review the checkout order summary before placing the order",
+    "description": "This verifies that a shopper can inspect subtotal, shipping, and total on checkout before submitting the order.",
+    "category": "Order Placement & Checkout",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Open the cart"
+      },
+      {
+        "type": "action",
+        "description": "Proceed to checkout"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the order summary breakdown is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify subtotal, shipping, and total are shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Fix invalid checkout inputs and submit successfully",
+    "description": "This verifies that a shopper sees validation feedback for incomplete checkout details, corrects the form, and can then place the order.",
+    "category": "Order Placement & Checkout",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /checkout"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to place the order with empty contact and shipping fields"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify validation feedback is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the full name field with a valid name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with a valid email address"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone field with a valid phone number"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the address field with a valid shipping address"
+      },
+      {
+        "type": "action",
+        "description": "Select a shipping method"
+      },
+      {
+        "type": "action",
+        "description": "Place the order"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the order confirmation screen is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC010",
+    "title": "Compare products within a category",
+    "description": "This verifies that a shopper can open one product, return to the catalog, and open another product to compare details.",
+    "category": "Product Browsing & Category Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "action",
+        "description": "Return to the category catalog"
+      },
+      {
+        "type": "action",
+        "description": "Click a different product from the catalog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the second product detail page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify product details are available for comparison"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC011",
+    "title": "View product gallery on a detail page",
+    "description": "This verifies that a shopper can inspect the product image gallery after opening a product detail page.",
+    "category": "Product Browsing & Category Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the product image gallery is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the product pricing is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC012",
+    "title": "Continue shopping from the order confirmation screen",
+    "description": "This verifies that a shopper can complete an order and return to category browsing from the confirmation flow.",
+    "category": "Order Placement & Checkout",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Open the cart"
+      },
+      {
+        "type": "action",
+        "description": "Proceed to checkout"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the full name field with a valid name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with a valid email address"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone field with a valid phone number"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the address field with a valid shipping address"
+      },
+      {
+        "type": "action",
+        "description": "Select a shipping method"
+      },
+      {
+        "type": "action",
+        "description": "Place the order"
+      },
+      {
+        "type": "action",
+        "description": "Continue shopping from the confirmation screen"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify category browsing is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the shopper can browse products again"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC013",
+    "title": "Remove the last item from the cart",
+    "description": "This verifies that a shopper can remove the final cart item and see the empty cart state.",
+    "category": "Shopping Cart Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "action",
+        "description": "Click a product from the catalog"
+      },
+      {
+        "type": "action",
+        "description": "Add the product to the cart"
+      },
+      {
+        "type": "action",
+        "description": "Open the cart"
+      },
+      {
+        "type": "action",
+        "description": "Remove the item from the cart"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty cart state is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no cart items remain"
+      }
+    ],
+    "priority": "Low"
+  }
+]

@@ -85,6 +85,7 @@ export interface Order {
   }[];
   subtotal: number;
   wholesaleDiscountTotal: number;
+  shippingCost?: number;
   total: number;
   paymentMethod: "cod";
   /** "not_applicable" for COD (no online payment collected) — kept for future CMI compatibility. */

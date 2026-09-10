@@ -9,6 +9,7 @@ import { EmptyCartState } from "@/components/cart/EmptyCartState";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { CustomerInfoForm } from "@/components/checkout/CustomerInfoForm";
 import { WhatsAppHandoff } from "@/components/checkout/WhatsAppHandoff";
+import { computeShippingCost, type ShippingMethod } from "@/lib/pricing";
 
 const EMPTY_CUSTOMER: CustomerInfo = { name: "", phone: "", address: "", city: "", notes: "" };
 const PENDING_ORDER_KEY = "tuiglo-pending-whatsapp-order";
@@ -103,9 +104,12 @@ export default function CheckoutPage() {
   const { lines, totals, clear } = useCart();
   const [customer, setCustomer] = useState<CustomerInfo>(EMPTY_CUSTOMER);
   const [errors, setErrors] = useState<CustomerInfoErrors>({});
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>("casablanca");
   const [order, setOrder] = useState<PendingOrder | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const shippingCost = computeShippingCost(customer.city, shippingMethod);
   // Stable per submission attempt: the same token is reused across a
   // double-click or a manual retry (so the server derives the same order ID
   // and can recognize the retry), and only reset when the customer goes
@@ -163,7 +167,12 @@ export default function CheckoutPage() {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lines, customer, submissionToken: submissionTokenRef.current }),
+        body: JSON.stringify({
+          lines,
+          customer,
+          shippingCost,
+          submissionToken: submissionTokenRef.current,
+        }),
       });
       const data = await res.json().catch(() => null);
 
@@ -222,11 +231,22 @@ export default function CheckoutPage() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="mt-6 space-y-6" noValidate>
-          <OrderSummary lines={lines} totals={totals} />
+          <OrderSummary
+            lines={lines}
+            totals={totals}
+            shippingCost={shippingCost}
+            shippingMethod={shippingMethod}
+          />
 
           <div>
             <h2 className="mb-4 text-sm font-semibold text-ink">معلومات التوصيل</h2>
-            <CustomerInfoForm customer={customer} errors={errors} onChange={setCustomer} />
+            <CustomerInfoForm
+              customer={customer}
+              errors={errors}
+              onChange={setCustomer}
+              shippingMethod={shippingMethod}
+              onShippingMethodChange={setShippingMethod}
+            />
           </div>
 
           <div className="rounded-md bg-brand-cream/60 p-3 text-xs text-ink/70">

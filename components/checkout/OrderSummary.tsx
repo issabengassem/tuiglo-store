@@ -7,10 +7,14 @@ import { ProductImage } from "@/components/ui/ProductImage";
 interface Props {
   lines: CartLine[];
   totals: CartTotals;
+  shippingCost?: number;
+  shippingMethod?: "casablanca" | "outside";
 }
 
 /** Read-only recap shown on /checkout before the customer confirms — no qty/remove controls. */
-export function OrderSummary({ lines, totals }: Props) {
+export function OrderSummary({ lines, totals, shippingCost = 15, shippingMethod = "casablanca" }: Props) {
+  const finalTotal = totals.total + shippingCost;
+
   return (
     <div className="rounded-md border border-ink/10 bg-brand-offwhite/60 p-4">
       <h2 className="mb-2 text-sm font-semibold text-ink">ملخص الطلب</h2>
@@ -57,9 +61,20 @@ export function OrderSummary({ lines, totals }: Props) {
             <span dir="ltr">-{formatPrice(totals.wholesaleDiscountTotal)}</span>
           </div>
         )}
-        <div className="flex justify-between text-base font-bold text-ink">
+        <div className="flex justify-between items-center">
+          <span className="text-ink/70">
+            الشحن{" "}
+            <span className="text-xs text-ink/50">
+              ({shippingMethod === "casablanca" ? "الدار البيضاء" : "خارج الدار البيضاء"})
+            </span>
+          </span>
+          <span dir="ltr" className="font-medium text-ink">
+            {formatPrice(shippingCost)}
+          </span>
+        </div>
+        <div className="flex justify-between text-base font-bold text-ink border-t border-ink/10 pt-2">
           <span>الإجمالي</span>
-          <span dir="ltr">{formatPrice(totals.total)}</span>
+          <span dir="ltr">{formatPrice(finalTotal)}</span>
         </div>
       </div>
     </div>

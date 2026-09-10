@@ -32,6 +32,34 @@ export const WHOLESALE_TIERS: WholesaleTier[] = [
 /** The lowest quantity at which any discount at all applies. */
 export const WHOLESALE_THRESHOLD = WHOLESALE_TIERS[WHOLESALE_TIERS.length - 1].minQty;
 
+/** Shipping rates in MAD (DH): 15 DH inside Casablanca, 25 DH outside Casablanca */
+export const SHIPPING_RATES = {
+  CASABLANCA: 15,
+  OUTSIDE_CASABLANCA: 25,
+} as const;
+
+export type ShippingMethod = "casablanca" | "outside";
+
+export function isCasablancaCity(city?: string | null): boolean {
+  if (!city || typeof city !== "string") return false;
+  const normalized = city.trim().toLowerCase();
+  return (
+    normalized.includes("casablanca") ||
+    normalized.includes("casa") ||
+    normalized.includes("الدار البيضاء") ||
+    normalized.includes("كازا") ||
+    normalized.includes("بيضاء")
+  );
+}
+
+export function computeShippingCost(city?: string | null, selectedMethod?: ShippingMethod): number {
+  if (selectedMethod === "casablanca") return SHIPPING_RATES.CASABLANCA;
+  if (selectedMethod === "outside") return SHIPPING_RATES.OUTSIDE_CASABLANCA;
+  if (city && isCasablancaCity(city)) return SHIPPING_RATES.CASABLANCA;
+  if (city && city.trim().length > 0) return SHIPPING_RATES.OUTSIDE_CASABLANCA;
+  return SHIPPING_RATES.CASABLANCA;
+}
+
 export function deductionForQuantity(qty: number): number {
   return activeTier(qty)?.deduction ?? 0;
 }
